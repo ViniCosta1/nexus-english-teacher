@@ -1,0 +1,28 @@
+# Render Blueprint — single service that serves the Flutter web app AND the API
+# from one origin (Option A). Deploy: push to GitHub, then "New > Blueprint" on
+# Render and point it at this repo.
+#
+# Before deploying, run ./scripts/build-web.sh locally and commit api/public so
+# Render does not need the Flutter SDK at build time.
+services:
+  - type: web
+    name: beach-talk
+    runtime: node
+    plan: free
+    rootDir: api
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      # Set these two in the Render dashboard (Secrets) — never commit them.
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: APP_CLIENT_TOKEN
+        sync: false
+      - key: OPENAI_REALTIME_MODEL
+        value: gpt-realtime-2
+      - key: OPENAI_REALTIME_VOICE
+        value: marin
+      - key: OPENAI_SPEECH_MODEL
+        value: gpt-4o-mini-tts
+      - key: OPENAI_SPEECH_VOICE
+        value: coral
