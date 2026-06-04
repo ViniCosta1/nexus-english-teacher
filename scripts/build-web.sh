@@ -29,4 +29,10 @@ echo "Copying build/web -> api/public..."
 rm -rf api/public
 cp -r build/web api/public
 
+# Serve the loop video as a plain static file (NOT a Flutter asset) so the
+# service worker does not cache it and break HTTP Range requests on web.
+# VideoOrb loads it from the same origin as /raquete.mp4.
+echo "Copying raquete.mp4 -> api/public..."
+cp raquete.mp4 api/public/raquete.mp4
+
 echo "Done. api/public is ready to be served by the API."

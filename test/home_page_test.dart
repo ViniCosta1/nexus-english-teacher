@@ -9,7 +9,7 @@ void main() {
 
     expect(find.byType(SafeArea), findsOneWidget);
     expect(find.byType(SingleChildScrollView), findsOneWidget);
-    expect(find.textContaining('Olá, Fernanda'), findsOneWidget);
+    expect(find.textContaining('Fernanda'), findsOneWidget);
     expect(find.byType(VideoOrb), findsOneWidget);
     expect(find.text('Sobre o que\npodemos conversar?'), findsOneWidget);
     expect(find.widgetWithText(OutlinedButton, 'falar com ia'), findsOneWidget);

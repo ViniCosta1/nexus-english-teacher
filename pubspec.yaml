@@ -61,8 +61,11 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
-  assets:
-    - assets/raquete.mp4
+  # raquete.mp4 is intentionally NOT a Flutter asset: bundling it puts it under
+  # the service worker's cache, which serves media without honoring HTTP Range
+  # requests and breaks <video> playback on web. It is served as a plain static
+  # file by the API (scripts/build-web.sh copies it into api/public) and loaded
+  # via networkUrl in VideoOrb.
 
   # To add assets to your application, add an assets section, like this:
   # assets:
