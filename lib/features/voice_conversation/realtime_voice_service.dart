@@ -80,6 +80,9 @@ class WebRtcRealtimeTransport implements RealtimeTransport {
   RTCPeerConnection? _peerConnection;
   MediaStream? _localStream;
   RTCDataChannel? _dataChannel;
+  // Plays the assistant's audio. Without an attached sink the remote track is
+  // silent on mobile browsers, which block WebRTC autoplay (desktop does not).
+  RTCVideoRenderer? _remoteRenderer;
 
   @override
   Future<void> connect(String clientSecret) async {
@@ -91,6 +94,18 @@ class WebRtcRealtimeTransport implements RealtimeTransport {
         ],
       });
       _peerConnection = peerConnection;
+
+      final remoteRenderer = RTCVideoRenderer();
+      await remoteRenderer.initialize();
+      _remoteRenderer = remoteRenderer;
+
+      // Attach the assistant's audio track so it actually plays. Triggered
+      // inside the user's "start" gesture, so mobile autoplay policies allow it.
+      peerConnection.onTrack = (RTCTrackEvent event) {
+        if (event.streams.isNotEmpty) {
+          remoteRenderer.srcObject = event.streams.first;
+        }
+      };
 
       final localStream = await navigator.mediaDevices.getUserMedia({
         'audio': true,
@@ -151,6 +166,13 @@ class WebRtcRealtimeTransport implements RealtimeTransport {
 
     await _peerConnection?.close();
     _peerConnection = null;
+
+    final renderer = _remoteRenderer;
+    if (renderer != null) {
+      renderer.srcObject = null;
+      await renderer.dispose();
+      _remoteRenderer = null;
+    }
   }
 }
 

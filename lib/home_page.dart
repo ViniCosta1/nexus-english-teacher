@@ -35,7 +35,7 @@ class HomePage extends StatelessWidget {
                           const Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              'Olá, Fernanda',
+                              "Olá, Fernanda. I'm Teacher da Fer",
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
