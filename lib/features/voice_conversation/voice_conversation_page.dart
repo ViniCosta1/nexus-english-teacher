@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../components/orb.dart';
+import '../../components/video_orb.dart';
 import 'realtime_voice_service.dart';
 
 class VoiceConversationPage extends StatefulWidget {
@@ -62,7 +62,7 @@ class _VoiceConversationPageState extends State<VoiceConversationPage> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const Spacer(),
-              const Center(child: Orb(size: 180)),
+              const Center(child: VideoOrb(size: 180)),
               const SizedBox(height: 32),
               Text(
                 _statusLabel(_service.status),

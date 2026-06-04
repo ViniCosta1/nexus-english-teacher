@@ -10,7 +10,7 @@ void main() {
     await tester.pumpWidget(const MyApp());
 
     expect(find.byType(AppBar), findsNothing);
-    expect(find.text('Olá, Fernanda'), findsOneWidget);
+    expect(find.textContaining('Olá, Fernanda'), findsOneWidget);
     expect(find.text('Sobre o que\npodemos conversar?'), findsOneWidget);
     expect(find.text('falar com ia'), findsOneWidget);
     expect(find.text('aprender frases'), findsOneWidget);

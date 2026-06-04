@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'components/orb.dart';
+import 'components/video_orb.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({
@@ -35,7 +35,7 @@ class HomePage extends StatelessWidget {
                           const Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              "Olá, Fernanda. I'm Teacher da Fer",
+                              "Hi, Fernanda. I'm Teacher da Fer",
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
@@ -44,7 +44,7 @@ class HomePage extends StatelessWidget {
                             ),
                           ),
                           const Spacer(),
-                          const Center(child: Orb(size: 164)),
+                          const Center(child: VideoOrb(size: 164)),
                           const SizedBox(height: 44),
                           const Text(
                             'Sobre o que\npodemos conversar?',

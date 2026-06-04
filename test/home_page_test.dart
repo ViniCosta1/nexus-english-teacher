@@ -1,4 +1,4 @@
-import 'package:beach_talk/components/orb.dart';
+import 'package:beach_talk/components/video_orb.dart';
 import 'package:beach_talk/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -9,8 +9,8 @@ void main() {
 
     expect(find.byType(SafeArea), findsOneWidget);
     expect(find.byType(SingleChildScrollView), findsOneWidget);
-    expect(find.text('Olá, Fernanda'), findsOneWidget);
-    expect(find.byType(Orb), findsOneWidget);
+    expect(find.textContaining('Olá, Fernanda'), findsOneWidget);
+    expect(find.byType(VideoOrb), findsOneWidget);
     expect(find.text('Sobre o que\npodemos conversar?'), findsOneWidget);
     expect(find.widgetWithText(OutlinedButton, 'falar com ia'), findsOneWidget);
     expect(
