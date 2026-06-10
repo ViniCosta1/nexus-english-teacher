@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'components/video_orb.dart';
+import 'components/racket_orb.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({
@@ -44,7 +44,7 @@ class HomePage extends StatelessWidget {
                             ),
                           ),
                           const Spacer(),
-                          const Center(child: VideoOrb(size: 164)),
+                          Center(child: RacketOrb(size: 164)),
                           const SizedBox(height: 44),
                           const Text(
                             'Sobre o que\npodemos conversar?',
