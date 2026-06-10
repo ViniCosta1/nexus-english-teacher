@@ -28,6 +28,11 @@
 	<true/>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Precisamos acessar o microfone para conversar em inglês com a professora IA.</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
