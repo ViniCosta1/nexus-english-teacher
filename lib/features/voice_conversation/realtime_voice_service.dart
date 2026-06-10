@@ -33,13 +33,45 @@ class RealtimeApiClient {
   final Uri baseUri;
   final String appToken;
   final http.Client _httpClient;
+  String? _fetchedAppToken;
+
+  /// Uses the compile-time token when one was baked in (native builds can
+  /// pass --dart-define=BEACH_TALK_APP_TOKEN). Otherwise fetches it once from
+  /// the API itself: the web build is served by the API from the same origin,
+  /// and asking the server keeps the token in sync with APP_CLIENT_TOKEN
+  /// instead of depending on the build pipeline knowing the secret.
+  Future<String> _resolveAppToken() async {
+    if (appToken.isNotEmpty) {
+      return appToken;
+    }
+
+    final cached = _fetchedAppToken;
+    if (cached != null) {
+      return cached;
+    }
+
+    final response = await _httpClient.get(baseUri.resolve('/app-config'));
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw RealtimeVoiceException(
+        'API returned ${response.statusCode}: ${response.body}',
+      );
+    }
+
+    final body = jsonDecode(response.body) as Map<String, dynamic>;
+    final token = body['appToken'] as String?;
+    if (token == null || token.isEmpty) {
+      throw const RealtimeVoiceException('API did not return an app token');
+    }
+
+    _fetchedAppToken = token;
+    return token;
+  }
 
   Future<RealtimeSession> createClientSecret() async {
+    final token = await _resolveAppToken();
     final response = await _httpClient.post(
       baseUri.resolve('/realtime/client-secret'),
-      headers: {
-        if (appToken.isNotEmpty) 'x-beach-talk-app-token': appToken,
-      },
+      headers: {'x-beach-talk-app-token': token},
     );
 
     if (response.statusCode < 200 || response.statusCode >= 300) {

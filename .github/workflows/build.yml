@@ -8,6 +8,7 @@ on:
       - 'lib/**'
       - 'pubspec.yaml'
       - 'assets/**'
+      - 'raquete.mp4'
       - '.github/workflows/**'
 
 permissions:
@@ -31,20 +32,28 @@ jobs:
 
       - name: Build Web
         run: |
-          # Using a dummy token for the build if not provided
-          flutter build web --release --dart-define=BEACH_TALK_APP_TOKEN=dummy_token
+          # No app token is baked into the build: the web app fetches it at
+          # runtime from the API's /app-config endpoint, so it always matches
+          # the server's APP_CLIENT_TOKEN (a baked token kept drifting out of
+          # sync with the server and caused 401 "Invalid app token").
+          flutter build web --release
 
       - name: Commit and Push api/public
         run: |
           rm -rf api/public
           cp -r build/web api/public
-          
+
+          # Serve the loop video as a plain static file (NOT a Flutter asset)
+          # so the service worker does not cache it and break HTTP Range
+          # requests on web. VideoOrb loads it from /raquete.mp4.
+          cp raquete.mp4 api/public/raquete.mp4
+
           # Configure Git
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          
+
           git add api/public
-          
+
           # Only commit and push if there are changes
           if ! git diff --staged --quiet; then
             git commit -m "build: auto-compile flutter web"

@@ -9,12 +9,24 @@ import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 
 void main() {
-  test('RealtimeApiClient parses client secrets from the API', () async {
+  test('RealtimeApiClient fetches the app token and parses client secrets',
+      () async {
     final client = RealtimeApiClient(
       baseUri: Uri.parse('http://localhost:3000'),
       httpClient: MockClient((request) async {
+        if (request.url.path == '/app-config') {
+          expect(request.method, 'GET');
+
+          return http.Response(
+            jsonEncode({'appToken': 'runtime-app-token'}),
+            200,
+            headers: {'Content-Type': 'application/json'},
+          );
+        }
+
         expect(request.method, 'POST');
         expect(request.url.path, '/realtime/client-secret');
+        expect(request.headers['x-beach-talk-app-token'], 'runtime-app-token');
 
         return http.Response(
           jsonEncode({
@@ -31,6 +43,29 @@ void main() {
 
     expect(session.clientSecret, 'ephemeral-secret');
     expect(session.expiresAt, 123);
+  });
+
+  test('RealtimeApiClient sends a compile-time app token without fetching it',
+      () async {
+    final client = RealtimeApiClient(
+      baseUri: Uri.parse('http://localhost:3000'),
+      appToken: 'compile-time-token',
+      httpClient: MockClient((request) async {
+        expect(request.method, 'POST');
+        expect(request.url.path, '/realtime/client-secret');
+        expect(request.headers['x-beach-talk-app-token'], 'compile-time-token');
+
+        return http.Response(
+          jsonEncode({'clientSecret': 'ephemeral-secret'}),
+          200,
+          headers: {'Content-Type': 'application/json'},
+        );
+      }),
+    );
+
+    final session = await client.createClientSecret();
+
+    expect(session.clientSecret, 'ephemeral-secret');
   });
 
   testWidgets('VoiceConversationPage starts and ends a voice session', (

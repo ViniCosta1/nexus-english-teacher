@@ -47,6 +47,21 @@ export function createApp() {
     res.json({ ok: true, service: 'beach-talk-api' });
   });
 
+  // The web app is served from this same origin and fetches the shared app
+  // token here at runtime instead of having it baked in at build time. A token
+  // inside a public web bundle is readable by anyone anyway, and this keeps
+  // the server's APP_CLIENT_TOKEN as the single source of truth — the build
+  // pipeline no longer needs to know the secret.
+  app.get('/app-config', (_req, res) => {
+    const appToken = process.env.APP_CLIENT_TOKEN;
+    if (!appToken) {
+      res.status(500).json({ error: 'APP_CLIENT_TOKEN is not configured' });
+      return;
+    }
+
+    res.json({ appToken });
+  });
+
   app.post('/realtime/client-secret', async (req, res) => {
     const appToken = process.env.APP_CLIENT_TOKEN;
     if (!appToken) {

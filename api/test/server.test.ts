@@ -18,6 +18,28 @@ describe('Beach Talk API', () => {
     expect(response.body).toEqual({ ok: true, service: 'beach-talk-api' });
   });
 
+  it('exposes the app token to the web app via /app-config', async () => {
+    vi.stubEnv('APP_CLIENT_TOKEN', 'mobile-app-token');
+
+    const app = createApp();
+
+    const response = await request(app).get('/app-config');
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({ appToken: 'mobile-app-token' });
+  });
+
+  it('fails closed on /app-config when the app token is not configured', async () => {
+    vi.stubEnv('APP_CLIENT_TOKEN', '');
+
+    const app = createApp();
+
+    const response = await request(app).get('/app-config');
+
+    expect(response.status).toBe(500);
+    expect(response.body.error).toBe('APP_CLIENT_TOKEN is not configured');
+  });
+
   it('creates an OpenAI Realtime client secret', async () => {
     vi.stubEnv('APP_CLIENT_TOKEN', 'mobile-app-token');
     vi.stubEnv('OPENAI_API_KEY', 'test-api-key');
