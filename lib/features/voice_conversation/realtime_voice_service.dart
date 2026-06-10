@@ -62,6 +62,8 @@ class RealtimeApiClient {
 }
 
 abstract class RealtimeTransport {
+  Future<void> initialize();
+
   Future<void> connect(String clientSecret);
 
   Future<void> disconnect();
@@ -85,8 +87,24 @@ class WebRtcRealtimeTransport implements RealtimeTransport {
   RTCVideoRenderer? _remoteRenderer;
 
   @override
+  Future<void> initialize() async {
+    _localStream ??= await navigator.mediaDevices.getUserMedia({
+      'audio': true,
+      'video': false,
+    });
+    
+    if (_remoteRenderer == null) {
+      final remoteRenderer = RTCVideoRenderer();
+      await remoteRenderer.initialize();
+      _remoteRenderer = remoteRenderer;
+    }
+  }
+
+  @override
   Future<void> connect(String clientSecret) async {
     try {
+      await initialize();
+
       final peerConnection = await createPeerConnection({
         'sdpSemantics': 'unified-plan',
         'iceServers': [
@@ -95,24 +113,15 @@ class WebRtcRealtimeTransport implements RealtimeTransport {
       });
       _peerConnection = peerConnection;
 
-      final remoteRenderer = RTCVideoRenderer();
-      await remoteRenderer.initialize();
-      _remoteRenderer = remoteRenderer;
-
       // Attach the assistant's audio track so it actually plays. Triggered
       // inside the user's "start" gesture, so mobile autoplay policies allow it.
       peerConnection.onTrack = (RTCTrackEvent event) {
         if (event.streams.isNotEmpty) {
-          remoteRenderer.srcObject = event.streams.first;
+          _remoteRenderer?.srcObject = event.streams.first;
         }
       };
 
-      final localStream = await navigator.mediaDevices.getUserMedia({
-        'audio': true,
-        'video': false,
-      });
-      _localStream = localStream;
-
+      final localStream = _localStream!;
       for (final track in localStream.getTracks()) {
         await peerConnection.addTrack(track, localStream);
       }
@@ -210,6 +219,16 @@ class RealtimeVoiceService extends ChangeNotifier {
     _setStatus(VoiceConversationStatus.connecting);
 
     try {
+      // Immediately request microphone access (to keep the user gesture context)
+      // This prevents mobile browsers from silently blocking the mic/audio.
+      await _transport.initialize();
+
+      if (_stopRequested || _disposed) {
+        errorMessage = null;
+        _setStatus(VoiceConversationStatus.disconnected);
+        return;
+      }
+
       final session = await _apiClient.createClientSecret();
       if (_stopRequested || _disposed) {
         errorMessage = null;
