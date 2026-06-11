@@ -12,7 +12,7 @@ repo_root="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$repo_root"
 
 echo "Building Flutter web..."
-flutter build web --release --web-renderer html
+flutter build web --release
 
 echo "Copying build/web -> api/public..."
 rm -rf api/public
