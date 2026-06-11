@@ -36,7 +36,7 @@ jobs:
           # runtime from the API's /app-config endpoint, so it always matches
           # the server's APP_CLIENT_TOKEN (a baked token kept drifting out of
           # sync with the server and caused 401 "Invalid app token").
-          flutter build web --release
+          flutter build web --release --web-renderer html
 
       - name: Commit and Push api/public
         run: |
