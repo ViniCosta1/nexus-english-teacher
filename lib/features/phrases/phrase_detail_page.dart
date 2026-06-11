@@ -55,131 +55,143 @@ class _PhraseDetailPageState extends State<PhraseDetailPage> {
         title: const Text('Detalhe da frase'),
       ),
       body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.all(24),
-          children: [
-            Text(
-              phrase.text,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 26,
-                fontWeight: FontWeight.w700,
-                height: 1.25,
-              ),
-            ),
-            const SizedBox(height: 24),
-            _SectionCard(
-              title: 'Significado',
-              child: Text(
-                phrase.meaningPtBr,
-                style: const TextStyle(color: Colors.white, fontSize: 18),
-              ),
-            ),
-            const SizedBox(height: 16),
-            _SectionCard(
-              title: 'Pronuncia',
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text(
-                    phrase.pronunciationHint,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontFamily: 'monospace',
-                      letterSpacing: 0.5,
-                    ),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 760),
+            child: ListView(
+              padding: const EdgeInsets.all(24),
+              children: [
+                Text(
+                  phrase.text,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 26,
+                    fontWeight: FontWeight.w700,
+                    height: 1.25,
                   ),
-                  const SizedBox(height: 14),
-                  OutlinedButton.icon(
-                    onPressed: _isSpeaking ? null : _speakPhrase,
-                    icon: Icon(_isSpeaking ? Icons.hourglass_empty : Icons.volume_up),
-                    label: Text(_isSpeaking ? 'gerando áudio...' : 'ouvir frase'),
-                  ),
-                  if (_speechError != null) ...[
-                    const SizedBox(height: 8),
-                    Text(
-                      _speechError!,
-                      style: const TextStyle(color: Colors.redAccent),
-                    ),
-                  ],
-                ],
-              ),
-            ),
-            if (phrase.words.isNotEmpty) ...[
-              const SizedBox(height: 16),
-              _SectionCard(
-                title: 'Palavra por palavra',
-                child: Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: [
-                    for (final pw in phrase.words)
-                      _WordChip(word: pw.word, translation: pw.translation),
-                  ],
                 ),
-              ),
-            ],
-            if (phrase.vars.isNotEmpty) ...[
-              const SizedBox(height: 16),
-              _SectionCard(
-                title: 'Variações',
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    for (final v in phrase.vars)
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 12),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              v[0],
+                const SizedBox(height: 24),
+                _SectionCard(
+                  title: 'Significado',
+                  child: Text(
+                    phrase.meaningPtBr,
+                    style: const TextStyle(color: Colors.white, fontSize: 18),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                _SectionCard(
+                  title: 'Pronuncia',
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text(
+                        phrase.pronunciationHint,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontFamily: 'monospace',
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                      const SizedBox(height: 14),
+                      OutlinedButton.icon(
+                        onPressed: _isSpeaking ? null : _speakPhrase,
+                        icon: Icon(
+                          _isSpeaking ? Icons.hourglass_empty : Icons.volume_up,
+                        ),
+                        label: Text(
+                          _isSpeaking ? 'gerando áudio...' : 'ouvir frase',
+                        ),
+                      ),
+                      if (_speechError != null) ...[
+                        const SizedBox(height: 8),
+                        Text(
+                          _speechError!,
+                          style: const TextStyle(color: Colors.redAccent),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+                if (phrase.words.isNotEmpty) ...[
+                  const SizedBox(height: 16),
+                  _SectionCard(
+                    title: 'Palavra por palavra',
+                    child: Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        for (final pw in phrase.words)
+                          _WordChip(
+                            word: pw.word,
+                            translation: pw.translation,
+                          ),
+                      ],
+                    ),
+                  ),
+                ],
+                if (phrase.vars.isNotEmpty) ...[
+                  const SizedBox(height: 16),
+                  _SectionCard(
+                    title: 'Variações',
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        for (final v in phrase.vars)
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 12),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  v[0],
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  v[1],
+                                  style: const TextStyle(
+                                    color: Colors.white54,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ],
+                if (phrase.examples.isNotEmpty) ...[
+                  const SizedBox(height: 16),
+                  _SectionCard(
+                    title: 'Exemplos',
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        for (final example in phrase.examples)
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: Text(
+                              example,
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 16,
-                                fontWeight: FontWeight.w600,
+                                height: 1.35,
                               ),
                             ),
-                            const SizedBox(height: 2),
-                            Text(
-                              v[1],
-                              style: const TextStyle(
-                                color: Colors.white54,
-                                fontSize: 14,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-            ],
-            if (phrase.examples.isNotEmpty) ...[
-              const SizedBox(height: 16),
-              _SectionCard(
-                title: 'Exemplos',
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    for (final example in phrase.examples)
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 8),
-                        child: Text(
-                          example,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            height: 1.35,
                           ),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-            ],
-          ],
+                      ],
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -226,10 +238,7 @@ class _WordChip extends StatelessWidget {
 }
 
 class _SectionCard extends StatelessWidget {
-  const _SectionCard({
-    required this.title,
-    required this.child,
-  });
+  const _SectionCard({required this.title, required this.child});
 
   final String title;
   final Widget child;

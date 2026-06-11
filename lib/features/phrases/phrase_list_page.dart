@@ -45,66 +45,68 @@ class _PhraseListPageState extends State<PhraseListPage> {
         title: const Text('Frases do dia a dia'),
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 12, 20, 8),
-              child: TextField(
-                onChanged: (value) => setState(() => _query = value),
-                style: const TextStyle(color: Colors.white),
-                decoration: InputDecoration(
-                  hintText: 'pesquisar em português, inglês ou fonética...',
-                  hintStyle: const TextStyle(color: Colors.white54),
-                  prefixIcon: const Icon(Icons.search, color: Colors.white54),
-                  filled: true,
-                  fillColor: const Color(0xFF181818),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(18),
-                    borderSide: const BorderSide(color: Color(0xFF3A3A3A)),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(18),
-                    borderSide: const BorderSide(color: Color(0xFF3A3A3A)),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(18),
-                    borderSide: const BorderSide(color: Color(0xFF6117F4)),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 760),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 12, 20, 8),
+                  child: TextField(
+                    onChanged: (value) => setState(() => _query = value),
+                    style: const TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                      hintText: 'pesquisar em português, inglês ou fonética...',
+                      hintStyle: const TextStyle(color: Colors.white54),
+                      prefixIcon: const Icon(Icons.search, color: Colors.white54),
+                      filled: true,
+                      fillColor: const Color(0xFF181818),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(18),
+                        borderSide: const BorderSide(color: Color(0xFF3A3A3A)),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(18),
+                        borderSide: const BorderSide(color: Color(0xFF3A3A3A)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(18),
+                        borderSide: const BorderSide(color: Color(0xFF6117F4)),
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
-            if (!_isSearching)
-              SizedBox(
-                height: 44,
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  itemCount: categories.length,
-                  separatorBuilder: (_, __) => const SizedBox(width: 8),
-                  itemBuilder: (context, index) {
-                    final cat = categories[index];
-                    final isSelected = cat.id == _selectedCategoryId;
-                    return _CategoryChip(
-                      label: cat.label,
-                      isSelected: isSelected,
-                      isAdvanced: cat.isAdvanced,
-                      onTap: () => setState(() => _selectedCategoryId = cat.id),
-                    );
-                  },
+                if (!_isSearching)
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 4, 20, 8),
+                    child: Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        for (final cat in categories)
+                          _CategoryChip(
+                            label: cat.label,
+                            isSelected: cat.id == _selectedCategoryId,
+                            isAdvanced: cat.isAdvanced,
+                            onTap: () =>
+                                setState(() => _selectedCategoryId = cat.id),
+                          ),
+                      ],
+                    ),
+                  ),
+                Expanded(
+                  child: ListView.separated(
+                    padding: const EdgeInsets.fromLTRB(20, 4, 20, 20),
+                    itemCount: _displayedPhrases.length,
+                    separatorBuilder: (_, __) => const SizedBox(height: 12),
+                    itemBuilder: (context, index) {
+                      return _PhraseTile(phrase: _displayedPhrases[index]);
+                    },
+                  ),
                 ),
-              ),
-            const SizedBox(height: 4),
-            Expanded(
-              child: ListView.separated(
-                padding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
-                itemCount: _displayedPhrases.length,
-                separatorBuilder: (_, __) => const SizedBox(height: 12),
-                itemBuilder: (context, index) {
-                  return _PhraseTile(phrase: _displayedPhrases[index]);
-                },
-              ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
