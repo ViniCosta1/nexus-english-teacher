@@ -4,7 +4,7 @@
   <base href="$FLUTTER_BASE_HREF">
 
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta http-equiv="X-UA-Compatible" content="IE=Edge">
   <meta name="description" content="Beach Talk — aprenda inglês para beach tennis">
 
@@ -25,13 +25,11 @@
   <link rel="manifest" href="manifest.json">
 
   <style>
-    /* Prevent iOS Safari bounce / overscroll showing white background */
-    html, body {
+    /* Fundo escuro enquanto o Flutter carrega — sem overflow ou height fixo
+       para não clipar o canvas do Flutter no iOS Safari */
+    body {
       background-color: #101010;
       margin: 0;
-      padding: 0;
-      height: 100%;
-      overflow: hidden;
     }
   </style>
 </head>
