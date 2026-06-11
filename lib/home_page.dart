@@ -58,12 +58,12 @@ class HomePage extends StatelessWidget {
                           ),
                           const Spacer(),
                           _HomeActionButton(
-                            label: 'falar com ia',
+                            label: 'Falar com IA',
                             onPressed: onTalkToAiPressed,
                           ),
                           const SizedBox(height: 14),
                           _HomeActionButton(
-                            label: 'aprender frases',
+                            label: 'Aprender frases',
                             onPressed: onLearnPhrasesPressed,
                           ),
                         ],

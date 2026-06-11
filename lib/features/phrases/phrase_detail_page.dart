@@ -100,7 +100,7 @@ class _PhraseDetailPageState extends State<PhraseDetailPage> {
                           _isSpeaking ? Icons.hourglass_empty : Icons.volume_up,
                         ),
                         label: Text(
-                          _isSpeaking ? 'gerando áudio...' : 'ouvir frase',
+                          _isSpeaking ? 'Gerando áudio...' : 'Ouvir frase',
                         ),
                       ),
                       if (_speechError != null) ...[

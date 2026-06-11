@@ -111,7 +111,7 @@ class _VoiceConversationPageState extends State<VoiceConversationPage> {
                         : _service.start,
                 icon: Icon(isConnected ? Icons.stop : Icons.mic_none),
                 label: Text(
-                  isConnected ? 'encerrar conversa' : 'iniciar conversa',
+                  isConnected ? 'Encerrar conversa' : 'Iniciar conversa',
                 ),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: Colors.white,
