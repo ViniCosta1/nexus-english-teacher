@@ -9,6 +9,7 @@ on:
       - 'pubspec.yaml'
       - 'assets/**'
       - 'raquete.mp4'
+      - 'web/**'
       - '.github/workflows/**'
 
 permissions:
