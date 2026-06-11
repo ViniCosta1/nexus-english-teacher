@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'phrase.dart';
 import 'phrase_detail_page.dart';
 import 'phrase_repository.dart';
+import 'phrase_speech_service.dart';
 
 class PhraseListPage extends StatefulWidget {
   const PhraseListPage({
@@ -177,10 +178,28 @@ class _CategoryChip extends StatelessWidget {
   }
 }
 
-class _PhraseTile extends StatelessWidget {
+class _PhraseTile extends StatefulWidget {
   const _PhraseTile({required this.phrase});
 
   final Phrase phrase;
+
+  @override
+  State<_PhraseTile> createState() => _PhraseTileState();
+}
+
+class _PhraseTileState extends State<_PhraseTile> {
+  final _speech = PhraseSpeechService();
+  bool _playing = false;
+
+  Future<void> _togglePlay() async {
+    if (_playing) return;
+    setState(() => _playing = true);
+    try {
+      await _speech.speak(widget.phrase.text);
+    } finally {
+      if (mounted) setState(() => _playing = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -192,27 +211,54 @@ class _PhraseTile extends StatelessWidget {
         onTap: () {
           Navigator.of(context).push(
             MaterialPageRoute<void>(
-              builder: (_) => PhraseDetailPage(phrase: phrase),
+              builder: (_) => PhraseDetailPage(phrase: widget.phrase),
             ),
           );
         },
         child: Padding(
-          padding: const EdgeInsets.all(18),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          padding: const EdgeInsets.fromLTRB(18, 14, 10, 14),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(
-                phrase.text,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 17,
-                  fontWeight: FontWeight.w700,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.phrase.text,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 17,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      widget.phrase.meaningPtBr,
+                      style: const TextStyle(
+                        color: Colors.white70,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 6),
-              Text(
-                phrase.meaningPtBr,
-                style: const TextStyle(color: Colors.white70, fontSize: 14),
+              const SizedBox(width: 8),
+              IconButton(
+                onPressed: _playing ? null : _togglePlay,
+                icon: _playing
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Color(0xFFBFA7FF),
+                        ),
+                      )
+                    : const Icon(Icons.volume_up_rounded),
+                color: const Color(0xFFBFA7FF),
+                disabledColor: const Color(0xFFBFA7FF),
+                tooltip: 'ouvir em inglês',
               ),
             ],
           ),
