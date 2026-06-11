@@ -76,32 +76,45 @@ class _PhraseListPageState extends State<PhraseListPage> {
                     ),
                   ),
                 ),
-                if (!_isSearching)
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 4, 20, 8),
-                    child: Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
-                      children: [
-                        for (final cat in categories)
-                          _CategoryChip(
-                            label: cat.label,
-                            isSelected: cat.id == _selectedCategoryId,
-                            isAdvanced: cat.isAdvanced,
-                            onTap: () =>
-                                setState(() => _selectedCategoryId = cat.id),
-                          ),
-                      ],
-                    ),
-                  ),
                 Expanded(
-                  child: ListView.separated(
-                    padding: const EdgeInsets.fromLTRB(20, 4, 20, 20),
-                    itemCount: _displayedPhrases.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 12),
-                    itemBuilder: (context, index) {
-                      return _PhraseTile(phrase: _displayedPhrases[index]);
-                    },
+                  child: CustomScrollView(
+                    slivers: [
+                      if (!_isSearching)
+                        SliverToBoxAdapter(
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
+                            child: Wrap(
+                              spacing: 8,
+                              runSpacing: 8,
+                              children: [
+                                for (final cat in categories)
+                                  _CategoryChip(
+                                    label: cat.label,
+                                    isSelected: cat.id == _selectedCategoryId,
+                                    isAdvanced: cat.isAdvanced,
+                                    onTap: () => setState(
+                                      () => _selectedCategoryId = cat.id,
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      SliverPadding(
+                        padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                        sliver: SliverList(
+                          delegate: SliverChildBuilderDelegate(
+                            (context, index) => Padding(
+                              padding: const EdgeInsets.only(bottom: 12),
+                              child: _PhraseTile(
+                                phrase: _displayedPhrases[index],
+                              ),
+                            ),
+                            childCount: _displayedPhrases.length,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],

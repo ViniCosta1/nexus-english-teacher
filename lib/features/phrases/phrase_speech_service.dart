@@ -16,11 +16,29 @@ class FlutterTtsPhraseEngine implements PhraseTtsEngine {
   bool _configured = false;
 
   Future<void> _ensureConfigured() async {
-    if (_configured) {
-      return;
-    }
+    if (_configured) return;
     await _tts.setLanguage('en-US');
-    // Slightly slower than default so learners can follow the pronunciation.
+    // On web the browser may not honor setLanguage unless a matching voice is
+    // explicitly selected — pick the first available English voice.
+    try {
+      final voices = await _tts.getVoices as List?;
+      if (voices != null) {
+        final enVoice = voices.cast<Map>().firstWhere(
+          (v) => (v['locale'] as String? ?? v['lang'] as String? ?? '')
+              .toLowerCase()
+              .startsWith('en'),
+          orElse: () => <String, String>{},
+        );
+        if (enVoice.isNotEmpty) {
+          await _tts.setVoice({
+            'name': enVoice['name'] as String,
+            'locale': (enVoice['locale'] ?? enVoice['lang']) as String,
+          });
+        }
+      }
+    } catch (_) {
+      // voice selection is best-effort; proceed with language-only setting
+    }
     await _tts.setSpeechRate(0.45);
     await _tts.setPitch(1.0);
     await _tts.awaitSpeakCompletion(true);
@@ -31,6 +49,8 @@ class FlutterTtsPhraseEngine implements PhraseTtsEngine {
   Future<void> speak(String text) async {
     await _ensureConfigured();
     await _tts.stop();
+    // Re-apply language on every call — some web browsers reset it between utterances.
+    await _tts.setLanguage('en-US');
     await _tts.speak(text);
   }
 
