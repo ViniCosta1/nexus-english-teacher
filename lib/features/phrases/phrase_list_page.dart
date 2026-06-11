@@ -18,10 +18,24 @@ class PhraseListPage extends StatefulWidget {
 
 class _PhraseListPageState extends State<PhraseListPage> {
   String _query = '';
+  late String _selectedCategoryId;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedCategoryId = widget.repository.orderedCategories.first.id;
+  }
+
+  bool get _isSearching => _query.isNotEmpty;
+
+  List<Phrase> get _displayedPhrases {
+    if (_isSearching) return widget.repository.search(_query);
+    return widget.repository.byCategory(_selectedCategoryId);
+  }
 
   @override
   Widget build(BuildContext context) {
-    final phrases = widget.repository.search(_query);
+    final categories = widget.repository.orderedCategories;
 
     return Scaffold(
       backgroundColor: const Color(0xFF101010),
@@ -39,7 +53,7 @@ class _PhraseListPageState extends State<PhraseListPage> {
                 onChanged: (value) => setState(() => _query = value),
                 style: const TextStyle(color: Colors.white),
                 decoration: InputDecoration(
-                  hintText: 'pesquisar...',
+                  hintText: 'pesquisar em português, inglês ou fonética...',
                   hintStyle: const TextStyle(color: Colors.white54),
                   prefixIcon: const Icon(Icons.search, color: Colors.white54),
                   filled: true,
@@ -59,17 +73,89 @@ class _PhraseListPageState extends State<PhraseListPage> {
                 ),
               ),
             ),
+            if (!_isSearching)
+              SizedBox(
+                height: 44,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  itemCount: categories.length,
+                  separatorBuilder: (_, __) => const SizedBox(width: 8),
+                  itemBuilder: (context, index) {
+                    final cat = categories[index];
+                    final isSelected = cat.id == _selectedCategoryId;
+                    return _CategoryChip(
+                      label: cat.label,
+                      isSelected: isSelected,
+                      isAdvanced: cat.isAdvanced,
+                      onTap: () => setState(() => _selectedCategoryId = cat.id),
+                    );
+                  },
+                ),
+              ),
+            const SizedBox(height: 4),
             Expanded(
               child: ListView.separated(
-                padding: const EdgeInsets.all(20),
-                itemCount: phrases.length,
-                separatorBuilder: (context, index) => const SizedBox(height: 12),
+                padding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
+                itemCount: _displayedPhrases.length,
+                separatorBuilder: (_, __) => const SizedBox(height: 12),
                 itemBuilder: (context, index) {
-                  return _PhraseTile(phrase: phrases[index]);
+                  return _PhraseTile(phrase: _displayedPhrases[index]);
                 },
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _CategoryChip extends StatelessWidget {
+  const _CategoryChip({
+    required this.label,
+    required this.isSelected,
+    required this.isAdvanced,
+    required this.onTap,
+  });
+
+  final String label;
+  final bool isSelected;
+  final bool isAdvanced;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final activeColor = isAdvanced ? const Color(0xFF7B2FBE) : const Color(0xFF6117F4);
+    final borderColor = isAdvanced ? const Color(0xFF9B59FF) : const Color(0xFF6117F4);
+
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 180),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        decoration: BoxDecoration(
+          color: isSelected ? activeColor : Colors.transparent,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: isSelected
+                ? activeColor
+                : isAdvanced
+                    ? const Color(0xFF9B59FF).withOpacity(0.5)
+                    : const Color(0xFF3A3A3A),
+          ),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            color: isSelected
+                ? Colors.white
+                : isAdvanced
+                    ? borderColor
+                    : Colors.white70,
+            fontSize: 13,
+            fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+          ),
         ),
       ),
     );
@@ -104,7 +190,7 @@ class _PhraseTile extends StatelessWidget {
                 phrase.text,
                 style: const TextStyle(
                   color: Colors.white,
-                  fontSize: 18,
+                  fontSize: 17,
                   fontWeight: FontWeight.w700,
                 ),
               ),

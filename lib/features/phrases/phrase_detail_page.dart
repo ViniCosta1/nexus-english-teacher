@@ -45,6 +45,8 @@ class _PhraseDetailPageState extends State<PhraseDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    final phrase = widget.phrase;
+
     return Scaffold(
       backgroundColor: const Color(0xFF101010),
       appBar: AppBar(
@@ -57,18 +59,19 @@ class _PhraseDetailPageState extends State<PhraseDetailPage> {
           padding: const EdgeInsets.all(24),
           children: [
             Text(
-              widget.phrase.text,
+              phrase.text,
               style: const TextStyle(
                 color: Colors.white,
-                fontSize: 28,
+                fontSize: 26,
                 fontWeight: FontWeight.w700,
+                height: 1.25,
               ),
             ),
             const SizedBox(height: 24),
             _SectionCard(
               title: 'Significado',
               child: Text(
-                widget.phrase.meaningPtBr,
+                phrase.meaningPtBr,
                 style: const TextStyle(color: Colors.white, fontSize: 18),
               ),
             ),
@@ -79,8 +82,13 @@ class _PhraseDetailPageState extends State<PhraseDetailPage> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
-                    widget.phrase.pronunciationHint,
-                    style: const TextStyle(color: Colors.white, fontSize: 18),
+                    phrase.pronunciationHint,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontFamily: 'monospace',
+                      letterSpacing: 0.5,
+                    ),
                   ),
                   const SizedBox(height: 14),
                   OutlinedButton.icon(
@@ -98,29 +106,120 @@ class _PhraseDetailPageState extends State<PhraseDetailPage> {
                 ],
               ),
             ),
-            const SizedBox(height: 16),
-            _SectionCard(
-              title: 'Exemplos',
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  for (final example in widget.phrase.examples)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 8),
-                      child: Text(
-                        example,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          height: 1.35,
+            if (phrase.words.isNotEmpty) ...[
+              const SizedBox(height: 16),
+              _SectionCard(
+                title: 'Palavra por palavra',
+                child: Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    for (final pw in phrase.words)
+                      _WordChip(word: pw.word, translation: pw.translation),
+                  ],
+                ),
+              ),
+            ],
+            if (phrase.vars.isNotEmpty) ...[
+              const SizedBox(height: 16),
+              _SectionCard(
+                title: 'Variações',
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    for (final v in phrase.vars)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              v[0],
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              v[1],
+                              style: const TextStyle(
+                                color: Colors.white54,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ),
-                ],
+                  ],
+                ),
               ),
-            ),
+            ],
+            if (phrase.examples.isNotEmpty) ...[
+              const SizedBox(height: 16),
+              _SectionCard(
+                title: 'Exemplos',
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    for (final example in phrase.examples)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: Text(
+                          example,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            height: 1.35,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ],
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _WordChip extends StatelessWidget {
+  const _WordChip({required this.word, required this.translation});
+
+  final String word;
+  final String translation;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: const Color(0xFF1E1130),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFF6117F4).withOpacity(0.4)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            word,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          Text(
+            translation,
+            style: const TextStyle(
+              color: Color(0xFFBFA7FF),
+              fontSize: 12,
+            ),
+          ),
+        ],
       ),
     );
   }
