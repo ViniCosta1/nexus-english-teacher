@@ -75,7 +75,7 @@ class _VoiceConversationPageState extends State<VoiceConversationPage> {
               ),
               const SizedBox(height: 16),
               const Text(
-                'Converse em inglês com sua professora AI.',
+                'Converse em inglês com sua professora IA.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.white,
