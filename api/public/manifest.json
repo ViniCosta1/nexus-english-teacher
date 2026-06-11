@@ -1,11 +1,11 @@
 {
-    "name": "beach_talk",
-    "short_name": "beach_talk",
+    "name": "Beach Talk",
+    "short_name": "Beach Talk",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#101010",
+    "theme_color": "#101010",
+    "description": "Aprenda inglês para beach tennis",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
