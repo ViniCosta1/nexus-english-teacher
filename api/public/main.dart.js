@@ -41504,7 +41504,7 @@ case 5:return A.I(null,r)
 case 1:return A.H(p.at(-1),r)}})
 return A.J($async$wM,r)},
 P(a){var s,r,q,p=this,o=null,n=p.a.c,m=A.arC(B.cx,B.k,B.a_9),l=A.cH(n.a,o,o,o,B.Y9,o,o),k=A.cH(n.b,o,o,o,B.XY,o,o),j=A.cH(n.c,o,o,o,B.Xg,o,o),i=p.e,h=i?o:p.gaeI(),g=A.a3y(i?B.Eo:B.Et,o),f=t.F
-h=A.c([j,B.yE,A.axB(g,A.cH(i?"gerando \xe1udio...":"ouvir frase",o,o,o,o,o,o),h,o)],f)
+h=A.c([j,B.yE,A.axB(g,A.cH(i?"Gerando \xe1udio...":"Ouvir frase",o,o,o,o,o,o),h,o)],f)
 j=p.f
 if(j!=null)B.b.M(h,A.c([B.UF,A.cH(j,o,o,o,B.z5,o,o)],f))
 l=A.c([l,B.UA,new A.mX("Significado",k,o),B.dx,new A.mX("Pronuncia",A.hP(h,B.cy,B.aA,B.bh),o)],f)
@@ -42022,7 +42022,7 @@ p.push(B.hN)
 if(n)q=r
 else q=o?q.gZ7():q.gbs()
 l=A.a3y(o?B.Es:B.Ep,r)
-p.push(A.axB(l,A.cH(o?"encerrar conversa":"iniciar conversa",r,r,r,r,r,r),q,A.axD(r,r,r,r,B.G,r,r,r,r,B.k,r,B.Ut,r,r,r,B.Ai,r,r,r,r)))
+p.push(A.axB(l,A.cH(o?"Encerrar conversa":"Iniciar conversa",r,r,r,r,r,r),q,A.axD(r,r,r,r,B.G,r,r,r,r,B.k,r,B.Ut,r,r,r,B.Ai,r,r,r,r)))
 p.push(B.yD)
 p.push(A.cH(o?"Fale em ingl\xeas. A IA responder\xe1 por voz e dar\xe1 dicas curtas.":"Configure a API em http://localhost:3000 para iniciar a sess\xe3o.",r,r,r,B.W9,B.bH,r))
 return A.asW(m,B.cx,A.Mc(!0,new A.cC(B.mM,A.hP(p,B.cy,B.aA,B.bh),r),!0))},
@@ -42046,7 +42046,7 @@ P(a){var s=A.b2(4279242768)
 return new A.d8(1/0,1/0,A.wB(A.Mc(!0,A.aHz(new A.a3p(this)),!0),s,!0),null)}}
 A.a3p.prototype={
 $2(a,b){var s=null,r=this.a
-return new A.tt(new A.ez(new A.aa(0,1/0,b.d,1/0),new A.JG(new A.cC(B.DX,A.hP(A.c([B.zS,B.hN,A.jN(new A.t3(164,s),s,s),B.UD,B.a_7,B.hN,new A.CT("falar com ia",r.c,s),B.yE,new A.CT("aprender frases",r.d,s)],t.F),B.cy,B.aA,B.bh),s),s),s),s)},
+return new A.tt(new A.ez(new A.aa(0,1/0,b.d,1/0),new A.JG(new A.cC(B.DX,A.hP(A.c([B.zS,B.hN,A.jN(new A.t3(164,s),s,s),B.UD,B.a_7,B.hN,new A.CT("Falar com IA",r.c,s),B.yE,new A.CT("Aprender frases",r.d,s)],t.F),B.cy,B.aA,B.bh),s),s),s),s)},
 $S:292}
 A.CT.prototype={
 P(a){var s=null
